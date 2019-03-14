@@ -19,9 +19,41 @@ $> bundle i
 $> REPO_NAME=<your-repo> GITLAB_API_ENDPOINT=https://gitlab.com/api/v4 GITLAB_API_PRIVATE_TOKEN=<personal-token> SLACK_WEBHOOK=<slack-webhook> ruby prabu.rb
 ```
 
+Docker:
+
 ```bash
 $> docker build . -t prabu
 
 $> docker run --rm -it -e REPO_NAME=<your-repo> -e GITLAB_API_ENDPOINT=https://gitlab.com/api/v4 -e GITLAB_API_PRIVATE_TOKEN=<personal-token> -e SLACK_WEBHOOK=<slack-webhook> prabu
 ```
 
+Kubernetes:
+
+```yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: prabu
+spec:
+  schedule: "0 10 * * 1"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: prabu
+            image: tpayet/prabu:latest
+            imagePullPolicy: Always
+            env:
+            - name: REPO_NAME
+              value: <your-repo>
+            - name: GITLAB_API_ENDPOINT
+              value: https://gitlab.com/api/v4
+            - name: GITLAB_API_PRIVATE_TOKEN
+              value: <personal-token>
+            - name: SLACK_WEBHOOK
+              value: <slack-webhook>
+          restartPolicy: Never
+
+
+```
