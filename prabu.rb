@@ -19,6 +19,8 @@ g = Git.clone(
   path: '/tmp'
 )
 Dir.chdir(g.dir.path)
+g.config('user.name', 'Meili Prabu')
+g.config('user.email', 'prabu@meilisearch.com')
 
 logger.info   'bundle install'
 install = `bundle install --quiet`
@@ -27,10 +29,6 @@ abort "#{install}" unless $?.exitstatus.zero?
 logger.info 'bundle update'
 update = `bundle update --quiet`
 abort "#{update}" unless $?.exitstatus.zero?
-
-logger.info 'rails spec'
-rspec = `rails spec`
-abort "#{rspec}" unless $?.exitstatus.zero?
 
 branch_name = "bundle-update-#{Time.now.to_i}"
 logger.info 'create branch & checkout'
